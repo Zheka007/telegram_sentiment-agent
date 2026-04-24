@@ -75,7 +75,7 @@ data/sentiment_sample.csv
 
 ### 1. Клонировать репозиторий
 
-git clone https://github.com/Zheka007/telegram_sentiment-agent.git 
+git clone https://github.com/Zheka007/telegram_sentiment-agent
 
 cd telegram_sentiment-agent
 
