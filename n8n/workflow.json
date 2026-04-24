@@ -1,0 +1,148 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "command": "=python \"C:\\Python\\telegram_sentiment-agent\\src\\predict.py\" \"{{$json.chatInput}}\""
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        368,
+        32
+      ],
+      "id": "72250a5c-8b8d-473a-9d9f-d5977cc2f681",
+      "name": "Execute Command"
+    },
+    {
+      "parameters": {
+        "options": {
+          "maxTokens": 200
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        512,
+        272
+      ],
+      "id": "7100fb5e-63f1-4148-8027-66ba2088fa33",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "yTFVW8o8vTgNWzg5",
+          "name": "OpenRouter account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Результат ML-модели:\n{{ $json.stdout }}\n\nОбъясни результат на русском простыми словами.\nИспользуй 1-2 предложения для ответа.\nЕсли отзыв положительный то поблагодарить за него, например: \"Спасибо за отзыв! Рады, что вам понравилось.\"\nЕсли отзыв отрицательльный, ответить что-то на подобие: \"Жаль, что возникла проблема. Мы можем передать это в поддержку.\"",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        576,
+        32
+      ],
+      "id": "88b326f8-141d-47ad-a630-1673507c1235",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        48,
+        32
+      ],
+      "id": "79a682bd-9c2e-45e5-bac0-7ae72e28f82e",
+      "name": "Set",
+      "webhookId": "5e4d4e3e-53e9-4af5-917e-c4708b33000f"
+    },
+    {
+      "parameters": {
+        "chatId": "5233515700",
+        "text": "={{$json.output}}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        928,
+        32
+      ],
+      "id": "1808ad26-2014-4f8c-b74f-137f33cd0f10",
+      "name": "Send a text message",
+      "webhookId": "599b5046-ac00-4d92-b3d1-3448691dc513",
+      "credentials": {
+        "telegramApi": {
+          "id": "FOYC4q6L9T3nM5VI",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Execute Command": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "69a2335d-a1c2-4a70-9bdc-0b51011649d0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bfed92e452b9c0f2dafeb70ed15d9cc51bbe22b27b7255ac7fc7aa9736a27b3e"
+  },
+  "id": "G65VQKYbCY7iZyYE",
+  "tags": []
+}
